@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=read_data
 #SBATCH --account=kempner_dam_lab
-#SBATCH --partition=kempner
+#SBATCH --partition=kempner_h100
 #SBATCH --ntasks-per-node=1 
 #SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1
@@ -20,5 +20,6 @@ module load cuda cudnn
 mamba activate ossenv
 
 data="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/sampled_data.parquet"
+n=150
 
-PYTHONPATH=. python examples/data_example.py --data $data \
+PYTHONPATH=. python examples/tst.py --data $data --n $n

@@ -13,9 +13,6 @@ def main():
     if args.user_only and "party" in df.columns:
         df = df[df["party"] == "USER"]
 
-    # drop missing dialogues just in case
-    df = df.dropna(subset=["extracted_dialogue"])
-
     print("Total rows (after filters):", len(df))
     for i in range(min(args.n, len(df))):
         row = df.iloc[i]
