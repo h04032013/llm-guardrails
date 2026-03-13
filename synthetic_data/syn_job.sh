@@ -21,7 +21,7 @@ module load cuda cudnn
 mamba activate ossenv
 
 sample_size=100  # Set sample_size=0 if you want to use the full version of 200k psersonas.
-out_path=/n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails/files/100_Bprmpt_120b_prompts.jsonl
+out_path=/n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails/files/zero_shot_100_ogprmpt_120b_prompts.jsonl
 #model_path=Qwen/Qwen3-8B
 #model_path=allenai/Olmo-3-7B-Think
 model_path=openai/gpt-oss-120b

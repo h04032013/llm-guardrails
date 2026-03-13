@@ -25,4 +25,4 @@ out_path=/n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails/files/shen_lab_120b
 model_path=openai/gpt-oss-20b
 tensor_parallel_size=2
 
-PYTHONPATH=. python synthetic_data/vllm_synthesize.py --model_path $model_path --sample_size $sample_size  --output_path $out_path  --tensor_parallel_size $tensor_parallel_size
+PYTHONPATH=. python synthetic_data/vllm_generate.py --model_path $model_path --sample_size $sample_size  --output_path $out_path  --tensor_parallel_size $tensor_parallel_size
