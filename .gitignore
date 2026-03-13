@@ -5,6 +5,7 @@ __pycache__/
 files/*.err
 # C extensions
 *.so
+records.txt
 
 # Distribution / packaging
 .Python
