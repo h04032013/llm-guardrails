@@ -12,7 +12,6 @@ module load python/3.10.12-fasrc01
 conda create --name ossenv python=3.12 pip numpy
 conda activate ossenv
 ```
-
 Next, install the required packages:
 ```bash
 pip install --upgrade uv
@@ -28,9 +27,24 @@ Warning: this might take sometime;
 ## Directory Structure
 ```
 llm-guardrails/
+├── convo_generation/ #generating responses to cleaned prompts and user convos
+    ├── run_gen.sh #run vllm_generate
+    ├── vllm_generate.py #generate responses using vllm
+    ├── api_oa_generate.py #generate responses using open api (make agnostic to input)
+    ├── run_api_oa.sh 
 ├── examples/ #demo scripts for prototyping 
     ├── data_example.py #load in extracted user input from anonymous reddit data
     ├── run_example.sh
+├── synthetic_data/ #scripts for generating synthetic data
+    ├── output_parser.py # parse thinking traces and clean output if vllm output is messy
+    ├── run_ps.sh
+    ├── vllm_synthesize.py #generate synthetic data using vllm 
+    ├── syn_job.sh 
+├── categorize/ #categorizing prompts and responses
+    ├── TBD- TODO: call api to categorize mentalchat prompts
+    ├── TBD- TODO: call api
+├── embeddings/ # for embedding inputs stage
+    ├── TBD- TODO: embed mentalchat prompts + find clusters 
 └── files/               # gitignored, outputs + runtime artifacts
 ```
 The `files` should contain all the directories for the outputs, results, and logs.
