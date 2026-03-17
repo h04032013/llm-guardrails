@@ -22,9 +22,8 @@ mamba activate ossenv
 
 sample_size=100  # Set sample_size=0 if you want to use the full version of 200k psersonas.
 out_path=/n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails/files/zero_shot_100_ogprmpt_120b_prompts.jsonl
-#model_path=Qwen/Qwen3-8B
-#model_path=allenai/Olmo-3-7B-Think
 model_path=openai/gpt-oss-120b
+max_tokens=512
 tensor_parallel_size=2
 
-PYTHONPATH=. python synthetic_data/vllm_synthesize.py --model_path $model_path --sample_size $sample_size  --output_path $out_path  --tensor_parallel_size $tensor_parallel_size
+PYTHONPATH=. python synthetic_data/vllm_synthesize.py --model_path $model_path --sample_size $sample_size  --output_path $out_path  --tensor_parallel_size $tensor_parallel_size --max_tokens $max_tokens

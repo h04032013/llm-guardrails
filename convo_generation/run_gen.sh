@@ -20,7 +20,7 @@ module load Mambaforge
 module load cuda cudnn
 mamba activate ossenv
 
-sample_size=100  # Set sample_size=0 if you want to use the full version of 200k psersonas.
+sample_size=0  # Set sample_size=0 if you want to use the full version of 200k psersonas.
 out_path=/n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails/files/shen_lab_120b.jsonl
 model_path=openai/gpt-oss-20b
 tensor_parallel_size=2

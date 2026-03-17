@@ -32,16 +32,13 @@ llm-guardrails/
     ├── vllm_generate.py #generate responses using vllm
     ├── api_oa_generate.py #generate responses using open api (make agnostic to input)
     ├── run_api_oa.sh 
-├── examples/ #demo scripts for prototyping 
-    ├── data_example.py #load in extracted user input from anonymous reddit data
-    ├── run_example.sh
 ├── synthetic_data/ #scripts for generating synthetic data
-    ├── output_parser.py # parse thinking traces and clean output if vllm output is messy
+    ├── output_parser.py # parse thinking traces to get final user promtps from vllm data
     ├── run_ps.sh
     ├── vllm_synthesize.py #generate synthetic data using vllm 
     ├── syn_job.sh 
 ├── categorize/ #categorizing prompts and responses
-    ├── TBD- TODO: call api to categorize mentalchat prompts
+    ├── categorize_input_16k.py #use vllm to categorize mentalchat16k prompts 
     ├── TBD- TODO: call api
 ├── embeddings/ # for embedding inputs stage
     ├── TBD- TODO: embed mentalchat prompts + find clusters 
