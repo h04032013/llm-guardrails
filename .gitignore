@@ -6,6 +6,7 @@ files/*.err
 # C extensions
 *.so
 records.txt
+categorize/run_cat.sh
 
 # Distribution / packaging
 .Python

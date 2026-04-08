@@ -1,0 +1,16 @@
+========================================
+Job ID:              4354619
+Node:                holygpu8a17401
+Model:               openai/gpt-oss-120b
+Dataset:             ShenLab/MentalChat16K
+Split:               train
+Text column:         input
+Sample size:         10
+Seed:                42
+Temperature:         0.0
+Top-p:               1.0
+Max tokens:          4096
+Output:              /n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/ShenLab_MentalChat16K/openai_gpt-oss-120b/10samples
+Start time:          Wed Apr  8 19:33:38 EDT 2026
+HF_HOME:             /n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub
+========================================

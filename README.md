@@ -27,19 +27,16 @@ Warning: this might take sometime;
 ## Directory Structure
 ```
 llm-guardrails/
-├── convo_generation/ #generating responses to cleaned prompts and user convos
-    ├── run_gen.sh #run vllm_generate
-    ├── vllm_generate.py #generate responses using vllm
+├── convo_generation/ #generating responses to prompts and user convos
     ├── api_oa_generate.py #generate responses using open api (make agnostic to input)
-    ├── run_api_oa.sh 
+    └── run_api_oa.sh 
 ├── synthetic_data/ #scripts for generating synthetic data
-    ├── output_parser.py # parse thinking traces to get final user promtps from vllm data
-    ├── run_ps.sh
     ├── vllm_synthesize.py #generate synthetic data using vllm 
-    ├── syn_job.sh 
-├── categorize/ #categorizing prompts and responses
-    ├── categorize_input_16k.py #use vllm to categorize mentalchat16k prompts 
-    ├── TBD- TODO: call api
+    └── syn_job.sh 
+├── categorize_input/ #categorizing prompts and responses
+    ├── categorize_input_vllm.py #use vllm to categorize input prompts, input dataset agnostic 
+    ├── dataset_utils.py #parsing think traces from OSS models
+    └──TBD- TODO: call api
 ├── embeddings/ # for embedding inputs stage
     ├── TBD- TODO: embed mentalchat prompts + find clusters 
 └── files/               # gitignored, outputs + runtime artifacts
@@ -51,3 +48,9 @@ To run the vLLM example on interactive node, execute:
 ```bash
 TBD 
 ```
+
+## Reference
+Data Synthesis scripts were adapted from:
+1. https://huggingface.co/datasets/proj-persona/PersonaHub
+2. https://github.com/tencent-ailab/persona-hub/tree/main/code/vllm_synthesize.py
+4. https://github.com/allenai/open-instruct/blob/main/scripts/persona_driven_data_gen/prompt_templates.py

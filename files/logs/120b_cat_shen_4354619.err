@@ -1,0 +1,4 @@
+  File "/n/holylabs/dam_lab/Users/hdiaz/llm-guardrails/categorize_input/categorize_input_vllm.py", line 121
+    f.write(json.dumps(r) + "\n")
+    ^
+IndentationError: expected an indented block after 'for' statement on line 120
