@@ -5,7 +5,7 @@ env_directory_setup() {
     module purge
     module load python
     mamba activate ossenv
-    cd /n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails
+    cd /n/llm-guardrails
 }
 
 make_directory() {
@@ -14,7 +14,7 @@ make_directory() {
 }
 
 env_directory_setup
-export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
+export HF_HOME="/n/hgf_new_hub"
 
 SAMPLE_SIZE=10
 NUM_GENERATIONS_PER_PERSONA=5
