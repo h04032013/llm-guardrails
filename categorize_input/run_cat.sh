@@ -1,16 +1,3 @@
-#!/bin/bash
-#SBATCH --job-name=120b_cat_shen
-#SBATCH --account=kempner_dam_lab
-#SBATCH --partition=kempner_h100
-#SBATCH --ntasks-per-node=1 
-#SBATCH --cpus-per-task=16
-#SBATCH --gres=gpu:4
-#SBATCH --time=0-03:00:00
-#SBATCH --mem=512G
-#SBATCH --output=files/logs/%x_%j.out
-#SBATCH --error=files/logs/%x_%j.err
-#SBATCH --mail-type=END
-#SBATCH --mail-user=hdiaz@g.harvard.edu
 
 set -euo pipefail
 
@@ -36,13 +23,13 @@ MODEL_PATH="openai/gpt-oss-120b"
 SPLIT="train"
 MODEL_SLUG="${MODEL_PATH//\//_}"
 TEXT_COLUMN="input"
-OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
+OUTPUT_DIR="/guardrail_data/categorized_input/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
 TEMPERATURE=0.0
 TOP_P=1.0
 MAX_TOKENS=4096
 SEED=42
 TENSOR_PARALLEL_SIZE=4
-JSONL_OUTPUT_PATH="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/jsonl_format/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples/${SPLIT}_${TEXT_COLUMN}.jsonl"
+JSONL_OUTPUT_PATH="/guardrail_data/categorized_input/jsonl_format/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples/${SPLIT}_${TEXT_COLUMN}.jsonl"
 
 make_directory
 
