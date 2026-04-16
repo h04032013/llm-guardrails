@@ -28,8 +28,8 @@ Warning: this might take sometime;
 ```
 llm-guardrails/
 ├── convo_generation/ #generating responses to prompts and user convos
-    ├── api_oa_generate.py #generate responses using open api (make agnostic to input)
-    └── run_api_oa.sh 
+    ├── api_generate.py #generate responses using api (make agnostic to input)
+    └── run_api.sh 
 ├── synthetic_data/ #scripts for generating synthetic data
     ├── vllm_synthesize.py #generate synthetic data using vllm 
     └── syn_job.sh 
@@ -42,12 +42,6 @@ llm-guardrails/
 └── files/               # gitignored, outputs + runtime artifacts
 ```
 The `files` should contain all the directories for the outputs, results, and logs.
-
-## Example Usage
-To run the vLLM example on interactive node, execute:
-```bash
-TBD 
-```
 
 ## Reference
 Data Synthesis scripts were adapted from:
