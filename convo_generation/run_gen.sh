@@ -1,5 +1,5 @@
 
-cd /n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails
+cd /n/llm-guardrails
 
 export HF_HOME="/n/hgf_new_hub"
 module purge
