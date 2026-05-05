@@ -1,0 +1,57 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "persona": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "persona_idx": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "user_messages": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "List"
+    },
+    "user_message_prompt": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "message_model_params": {
+      "max_token_length": {
+        "dtype": "int64",
+        "_type": "Value"
+      },
+      "model_name": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "seed": {
+        "dtype": "int64",
+        "_type": "Value"
+      },
+      "temperature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "top_p": {
+        "dtype": "float64",
+        "_type": "Value"
+      }
+    },
+    "persona_source_dataset": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "persona_source_dataset_config_name": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}
