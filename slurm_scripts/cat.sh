@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=cat_shen_500
 #SBATCH --account=kempner_dam_lab
-#SBATCH --partition=kempner
+#SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
@@ -28,7 +28,7 @@ make_directory() {
 }
 
 env_directory_setup
-export HF_HOME="/n/hgf_new_hub"
+export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
 
 SAMPLE_SIZE=500
 DATASET_NAME="ShenLab/MentalChat16K"
@@ -38,7 +38,7 @@ SPLIT="train"
 MODEL_SLUG="${MODEL_PATH//\//_}"
 TEXT_COLUMN="input"
 OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/HF_FORMAT/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
-TEMPERATURE=0.0
+TEMPERATURE=0.7
 TOP_P=1.0
 MAX_TOKENS=4096
 SEED=42
@@ -64,7 +64,7 @@ echo "Start time:          $(date)"
 echo "HF_HOME:             $HF_HOME"
 echo "========================================"
 
-python categorize_input/categorize_input_vllm.py \
+python categorize_text/vllm_categorize_input.py\
     --split "$SPLIT" \
     --text_column "$TEXT_COLUMN" \
     --model_path "$MODEL_PATH" \

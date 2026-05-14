@@ -2,11 +2,9 @@
 __pycache__/
 *.py[codz]
 *$py.class
-files/*.err
 # C extensions
 *.so
 records.txt
-categorize/run_cat.sh
 files/
 
 # Distribution / packaging
