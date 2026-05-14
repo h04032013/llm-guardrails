@@ -118,7 +118,7 @@ def main(args):
         os.makedirs(os.path.dirname(args.json_output_path), exist_ok=True)
         with open(args.json_output_path, "w") as f:
             for r in records:
-            f.write(json.dumps(r) + "\n")
+                f.write(json.dumps(r) + "\n")
 
     print(f"Saved JSON to: {args.json_output_path}")
 

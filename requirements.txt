@@ -1,6 +1,0 @@
-# NOTE: vllm and torch require special installation - see README for the full commands
-traker==0.3.2
-transformers
-datasets
-openai
-sentence_transformers
