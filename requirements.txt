@@ -4,3 +4,6 @@ transformers
 datasets
 openai
 sentence_transformers
+tenacity
+seaborn
+matplotlib

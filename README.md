@@ -27,18 +27,21 @@ Warning: this might take sometime;
 ## Directory Structure
 ```
 llm-guardrails/
+├── categorize_text/ #categorizing prompts and responses
+    ├── vllm_categorize_input.py #use vllm to label input prompts 
+    ├── vllm_categorize_output.py #use vllm to label output responses
+    └── dataset_utils.py #parsing think traces from OSS models
 ├── convo_generation/ #generating responses to prompts and user convos
-    ├── api_generate.py #generate responses using api (make agnostic to input)
-    └── run_api.sh 
-├── synthetic_data/ #scripts for generating synthetic data
-    ├── vllm_synthesize.py #generate synthetic data using vllm 
-    └── syn_job.sh 
-├── categorize_input/ #categorizing prompts and responses
-    ├── categorize_input_vllm.py #use vllm to categorize input prompts, input dataset agnostic 
-    ├── dataset_utils.py #parsing think traces from OSS models
-    └──TBD- TODO: call api
+    ├── vllm_synthesize_one_turn.py
+    └── vllm_synthesize_multi_turn.py 
 ├── embeddings/ # for embedding inputs stage
-    ├── TBD- TODO: embed mentalchat prompts + find clusters 
+    ├── TBD- TODO: embed input prompts + find clusters 
+├── slurm_scripts/
+    ├── gen.sh #generate model response to emotional prompts
+    ├── syn.sh #generate persona-based synthetic data
+    └── cat.sh #categorize given prompt, input data agnostic
+├── synthetic_data/ #scripts for generating synthetic data
+    └── api_synthesize.py
 └── files/               # gitignored, outputs + runtime artifacts
 ```
 The `files` should contain all the directories for the outputs, results, and logs.
