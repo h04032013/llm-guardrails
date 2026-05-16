@@ -4,10 +4,10 @@
 #SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
-#SBATCH --gpus-per-node=2
+#SBATCH --cpus-per-task=4
+#SBATCH --gpus-per-node=1
 #SBATCH --time=0-00:30:00
-#SBATCH --mem=40G
+#SBATCH --mem=64G
 #SBATCH --output=files/logs/%x_%j.out
 #SBATCH --error=files/logs/%x_%j.err
 #SBATCH --mail-type=END
@@ -40,9 +40,9 @@ TEXT_COLUMN="input"
 OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/HF_FORMAT/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
 TEMPERATURE=0.7
 TOP_P=1.0
-MAX_TOKENS=4096
+MAX_TOKEN_LENGTH=4096
 SEED=42
-TENSOR_PARALLEL_SIZE=2
+TENSOR_PARALLEL_SIZE=1
 JSONL_OUTPUT_PATH="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/JSONL_FORMAT/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples/${SPLIT}_${TEXT_COLUMN}.jsonl"
 
 make_directory
@@ -73,7 +73,7 @@ python categorize_text/vllm_categorize_input.py\
     --output_dir "$OUTPUT_DIR" \
     --tensor_parallel_size $TENSOR_PARALLEL_SIZE \
     --temperature $TEMPERATURE \
-    --json_output_path "$JSONL_OUTPUT_PATH" \
+    --json_output_path "$JSON_OUTPUT_PATH" \
     --max_tokens $MAX_TOKENS \
     --top_p $TOP_P \
     --seed $SEED

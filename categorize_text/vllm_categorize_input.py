@@ -114,13 +114,13 @@ def main(args):
         }
         records.append(record)
 
-    if args.json_output_path:
-        os.makedirs(os.path.dirname(args.json_output_path), exist_ok=True)
-        with open(args.json_output_path, "w") as f:
+    if args.jsonl_output_path:
+        os.makedirs(os.path.dirname(args.jsonl_output_path), exist_ok=True)
+        with open(args.jsonl_output_path, "w") as f:
             for r in records:
-            f.write(json.dumps(r) + "\n")
+                f.write(json.dumps(r) + "\n")
 
-    print(f"Saved JSON to: {args.json_output_path}")
+    print(f"Saved JSONL to: {args.jsonl_output_path}")
 
 # Create HF dataset
     hf_dataset = Dataset.from_list(records)
@@ -137,9 +137,8 @@ if __name__ == "__main__":
     parser.add_argument("--split", type=str, default="train")
     parser.add_argument("--text_column", type=str, required=True, help="Column containing the user text to classify.")
     parser.add_argument("--sample_size", type=int, default=0, help="Number of rows to process; 0 means full split.")
-    parser.add_argument("--model_path", type=str, required=True)
     parser.add_argument("--output_dir", type=str, required=True)
-    parser.add_argument("--json_output_path",type=str,default=None,help="Optional path to save results as a JSON file.")
+    parser.add_argument("--jsonl_output_path",type=str,default=None,help="Optional path to save results as a JSONL file.")
     parser.add_argument("--tensor_parallel_size", type=int, default=1)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top_p", type=float, default=1.0)

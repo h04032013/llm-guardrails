@@ -35,13 +35,14 @@ NUM_GENERATIONS_PER_PERSONA=5
 SEED=42
 TEMPERATURE=1.0
 TOP_P=1.0
-MAX_TOKENS=512
+MAX_TOKEN_LENGTH=512
 DATASET_NAME="proj-persona/PersonaHub"
 DATASET_CONFIG_NAME="persona"
 
 DATASET_SLUG="${DATASET_NAME//\//_}"
 MODEL_NAME="gpt-4.1-mini"
 MODEL_SLUG="${MODEL_NAME//\//_}"
+SPLIT="train"
 TENSOR_PARALLEL_SIZE=1
 API_KEY_PATH="/n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails/files/logs/api_key.txt"
 OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/synthetic_data/HF_FORMAT/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples/${SPLIT}_${TEXT_COLUMN}.jsonl"
@@ -69,11 +70,14 @@ python generate/math/synthesize_questions.py \
     --model_name "$MODEL_NAME" \
     --sample_size $SAMPLE_SIZE \
     --generations_per_persona $NUM_GENERATIONS_PER_PERSONA \
-    --persona_source_dataset "$DATASET_NAME" \
-    --persona_source_dataset_config_name "$DATASET_CONFIG_NAME" \
-    --output_dir "$OUTPUT_DIR" \
+    --dataset_name "$DATASET_NAME" \
+    --dataset_config "$DATASET_CONFIG_NAME" \
+    --hf_output_path "$OUTPUT_DIR" \
+    --split $SPLIT \
+    --jsonl_output_path "$JSONL_OUTPUT_PATH" \
     --tensor_parallel_size $TENSOR_PARALLEL_SIZE \
     --temperature $TEMPERATURE \
-    --max_tokens $MAX_TOKENS \
+    --max_token_length $MAX_TOKENS \
     --top_p $TOP_P \
-    --seed $SEED
+    --seed $SEED \
+    --api_key_path $API_KEY_PATH" \
