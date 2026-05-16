@@ -86,7 +86,7 @@ def main(args):
         temperature=args.temperature,
         seed=args.seed,
         top_p=args.top_p,
-        max_tokens=args.max_tokens,
+        max_tokens=args.max_token_length,
         stop=[args.stop] if args.stop else None,
     )
 
@@ -107,7 +107,7 @@ def main(args):
                         "model_name": args.model_path,
                         "temperature": args.temperature,
                         "top_p": args.top_p,
-                        "max_tokens": args.max_tokens,
+                        "max_token_length": args.max_token_length,
                         "seed": args.seed,
                         "prompt": output.prompt,
                     }
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     parser.add_argument("--tensor_parallel_size", type=int, default=1)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top_p", type=float, default=1.0)
-    parser.add_argument("--max_tokens", type=int, default=4096)
+    parser.add_argument("--max_token_length", type=int, default=4096)
     parser.add_argument("--stop", type=str, default=None)
     parser.add_argument("--seed", type=int, default=42)
 

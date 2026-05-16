@@ -73,7 +73,7 @@ python categorize_text/vllm_categorize_input.py\
     --output_dir "$OUTPUT_DIR" \
     --tensor_parallel_size $TENSOR_PARALLEL_SIZE \
     --temperature $TEMPERATURE \
-    --json_output_path "$JSON_OUTPUT_PATH" \
-    --max_tokens $MAX_TOKENS \
+    --jsonl_output_path "$JSONL_OUTPUT_PATH" \
+    --max_token_length $MAX_TOKEN_LENGTH \
     --top_p $TOP_P \
     --seed $SEED
