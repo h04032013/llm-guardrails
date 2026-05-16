@@ -118,7 +118,7 @@ def main(args):
         os.makedirs(os.path.dirname(args.jsonl_output_path), exist_ok=True)
         with open(args.jsonl_output_path, "w") as f:
             for r in records:
-                f.write(json.dumps(r) + "\n")
+                f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
     print(f"Saved JSONL to: {args.jsonl_output_path}")
 
@@ -134,6 +134,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Classify dataset inputs with a vLLM model.")
     parser.add_argument("--dataset_name", type=str, required=True)
+    parser.add_argument("--model_path", type=str, required=True)
     parser.add_argument("--split", type=str, default="train")
     parser.add_argument("--text_column", type=str, required=True, help="Column containing the user text to classify.")
     parser.add_argument("--sample_size", type=int, default=0, help="Number of rows to process; 0 means full split.")

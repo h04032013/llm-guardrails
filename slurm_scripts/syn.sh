@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=api_syn_10x5
 #SBATCH --account=kempner_dam_lab
-#SBATCH --partition=kempner
+#SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
