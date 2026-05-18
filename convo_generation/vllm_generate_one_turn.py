@@ -4,10 +4,10 @@ import json
 from tqdm import tqdm
 from vllm import LLM, SamplingParams
 from datasets import load_dataset
-
-#https://huggingface.co/datasets/proj-persona/PersonaHub 
-#https://github.com/tencent-ailab/persona-hub/tree/main/code
-#https://github.com/allenai/open-instruct/blob/main/scripts/persona_driven_data_gen/persona_driven_generate_math_code.py
+from dataset_utils import (
+    sanitize_generated_text,
+    save_dataset_dict,
+)
 
 def request_input_format(user_text, tokenizer):
     system_prompt = "You are a helpful assistant."
@@ -18,21 +18,20 @@ def request_input_format(user_text, tokenizer):
     return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
 def main(args):
-    # Load dataset
-    ds = load_dataset(args.dataset_name, split="train")
+    dataset = load_from_disk(args.dataset_name)
 
     if args.sample_size > 0:
-        ds = ds.select(range(args.sample_size))
+        dataset = dataset.select(range(min(args.sample_size, len(dataset))))
 
-    print(f"Total inputs: {len(ds)}")
+    print(f"Total inputs: {len(dataset)}")
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path)
     llm = LLM( model=args.model_path, tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_model_len)
 
     # Build prompts using ONLY the "input" field
     prompts = []
-    for ex in ds:
-        user_text = ex["input"].strip()
+    for ex in dataset:
+        user_text = ex[args.text_column].strip()
         prompts.append(request_input_format(user_text, tokenizer))
 
     sampling_params = SamplingParams(
@@ -42,16 +41,45 @@ def main(args):
         max_tokens=args.max_tokens)
 
     outputs = llm.generate(prompts, sampling_params)
+    records = []
 
-    with open(args.output_dir, "w", encoding="utf-8") as f:
-        for i, out in enumerate(outputs):
-            f.write(json.dumps({
-                "input": ds[i]["input"],
-                "generation": out.outputs[0].text,   # single output
-                "finish_reason": out.outputs[0].finish_reason
-            }, ensure_ascii=False) + "\n")
+     for row, user_text, output in zip(rows, extracted_texts, outputs):
+        gen = output.outputs[0]
+        gen_text = gen.text.strip()
 
-    print(f"Wrote: {args.output_dir}")
+        record = {
+            "input": user_text,
+            "model_generation": sanitize_generated_text(gen_text),
+            "finish_reason": gen.finish_reason,
+            "metadata": {
+                        "generation": {
+                            "model_name": args.model_path,
+                            "temperature": args.temperature,
+                            "top_p": args.top_p,
+                            "max_token_length": args.max_token_length,
+                            "seed": args.seed,
+                            "prompt": output.prompt,
+                            "dataset": args.dataset_name
+                        },
+                        "upstream_metadata": row.get("metadata", {}),
+                    }
+        }
+        records.append(record)
+
+    if args.jsonl_output_path:
+        os.makedirs(os.path.dirname(args.jsonl_output_path), exist_ok=True)
+        with open(args.jsonl_output_path, "w") as f:
+            for r in records:
+                f.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+    print(f"Saved JSONL to: {args.jsonl_output_path}")
+
+# Create + save HF dataset
+    hf_dataset = Dataset.from_list(records)
+    hf_dataset.save_to_disk(args.output_dir)
+
+    print(f"\nSaved Hugging Face dataset to: {args.output_dir}")
+    print(hf_dataset[0])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

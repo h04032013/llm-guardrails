@@ -100,17 +100,8 @@ async def main():
 
         return {
             "id": record_id,
-            "persona": persona,
-            "prompt": prompt,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": content,
-                }
-            ],
+            "synthetic_input": content, 
             "metadata": {
-                "persona_source_dataset": args.dataset_name,
-                "persona_source_dataset_config_name": args.dataset_config,
                 "synthesize_model_params": {
                     "seed": generation_seed,
                     "temperature": args.temperature,
@@ -118,8 +109,13 @@ async def main():
                     "max_token_length": args.max_token_length,
                     "model_name": args.model_name,
                 },
-                "question_generation_prompt": QUESTION_GENERATION_PROMPT,
-                "generation_idx": generation_idx,
+                "synthetesize_data_params": {
+                    "persona_source_dataset": args.dataset_name,
+                    "persona_source_dataset_config_name": args.dataset_config,
+                    "persona": persona,
+                    "prompt": prompt,
+                    "generation_idx": generation_idx,
+                },
             },
         }
 

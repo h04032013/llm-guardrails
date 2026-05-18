@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=one_turn_res_shen
+#SBATCH --job-name=one_turn_res_shen_5
 #SBATCH --account=kempner_dam_lab
 #SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
@@ -30,20 +30,19 @@ make_directory() {
 env_directory_setup
 export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
 
-SAMPLE_SIZE=10
-DATASET_NAME="ShenLab/MentalChat16K"
-DATASET_SLUG="${DATASET_NAME//\//_}"
+SAMPLE_SIZE=5
+DATASET_NAME="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/HF_FORMAT/ShenLab_MentalChat16K/openai_gpt-oss-20b/16084samples"
 MODEL_PATH="openai/gpt-oss-120b"
 SPLIT="train"
 MODEL_SLUG="${MODEL_PATH//\//_}"
 TEXT_COLUMN="input"
-OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/generated_responses/HF_FORMAT/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
+OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/generated_responses/one_turn/HF_FORMAT/MentalChat16k/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
 TEMPERATURE=0.7
 TOP_P=1.0
-MAX_TOKEN_LENGTH=4096
+MAX_TOKEN_LENGTH=8192
 SEED=42
 TENSOR_PARALLEL_SIZE=2
-JSONL_OUTPUT_PATH="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/generated_responses/JSONL_FORMAT/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples/${SPLIT}_${TEXT_COLUMN}.jsonl"
+JSONL_OUTPUT_PATH="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/generated_responses/one_turn/JSONL_FORMAT/MentalChat16k/${MODEL_SLUG}/${SAMPLE_SIZE}samples/${SPLIT}_${TEXT_COLUMN}.jsonl"
 
 make_directory
 

@@ -1,7 +1,7 @@
 import argparse
 import json
 import os
-from datasets import load_dataset, Dataset
+from datasets import load_dataset, Dataset, load_from_disk
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
 from dataset_utils import (
@@ -10,7 +10,7 @@ from dataset_utils import (
 )
 
 def request_input_format(user_prompt, tokenizer):
-    system_prompt = "You are a useful assistant."
+    system_prompt = "You are a helpful assistant."
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt},
@@ -20,6 +20,28 @@ def request_input_format(user_prompt, tokenizer):
         tokenize=False,
         add_generation_prompt=True,
     )
+
+def extract_user_text(row, text_column=None):
+    """
+    Supports:
+    1. Flat datasets:
+       {"input": "..."} or {"prompt": "..."}
+    2. Chat-style datasets:
+       {"messages": [{"role": "user", "content": "..."}]}
+    """
+
+    if text_column:
+        value = row.get(text_column, "")
+        return str(value).strip()
+
+    messages = row.get("messages", [])
+
+    if isinstance(messages, list):
+        for message in messages:
+            if isinstance(message, dict) and message.get("role") == "user":
+                return str(message.get("content", "")).strip()
+
+    return ""
 
 def build_classification_prompt(user_text):
     return f"""Classify the following user message into exactly ONE of the following categories:
@@ -50,7 +72,11 @@ User message:
 """
 
 def main(args):
-    dataset = load_dataset(args.dataset_name, split=args.split)
+
+    if args.dataset_source == "hub":
+        dataset = load_dataset(args.dataset_name, split=args.split)
+    else:
+        dataset = load_from_disk(args.dataset_name)
 
     if args.sample_size > 0:
         dataset = dataset.select(range(min(args.sample_size, len(dataset))))
@@ -65,9 +91,10 @@ def main(args):
 
     prompts = []
     rows = []
+    extracted_texts = []
 
     for row in dataset:
-        user_text = str(row.get(args.text_column, "")).strip()
+        user_text = extract_user_text(row, args.text_column)
         if not user_text:
             continue
 
@@ -76,6 +103,7 @@ def main(args):
 
         prompts.append(prompt)
         rows.append(row)
+        extracted_texts.append(user_text)
 
     print(f"Prepared {len(prompts)} prompts")
     if prompts:
@@ -94,22 +122,31 @@ def main(args):
 
     records = []
 
-    for row, output in zip(rows, outputs):
+    for row, user_text, output in zip(rows, extracted_texts, outputs):
         gen = output.outputs[0]
         gen_text = gen.text.strip()
 
         record = {
-            "input": row.get(args.text_column, ""),
+            "input": user_text,
             "raw_generation": gen_text,
             "predicted_category": sanitize_generated_text(gen_text),
             "finish_reason": gen.finish_reason,
-            "metadata": {"dataset_name": args.dataset_name,
-                        "model_name": args.model_path,
-                        "temperature": args.temperature,
-                        "top_p": args.top_p,
-                        "max_token_length": args.max_token_length,
-                        "seed": args.seed,
-                        "prompt": output.prompt,
+            "metadata": {
+                        "classification": {
+                            "model_name": args.model_path,
+                            "temperature": args.temperature,
+                            "top_p": args.top_p,
+                            "max_token_length": args.max_token_length,
+                            "seed": args.seed,
+                            "prompt": output.prompt,
+                        },
+                        "dataset": {
+                            "source": args.dataset_source,
+                            "name_or_path": args.dataset_name,
+                            "split": args.split,
+                            "text_column": args.text_column,
+                        },
+                        "upstream_metadata": row.get("metadata", {}),
                     }
         }
         records.append(record)
@@ -122,10 +159,8 @@ def main(args):
 
     print(f"Saved JSONL to: {args.jsonl_output_path}")
 
-# Create HF dataset
+# Create + save HF dataset
     hf_dataset = Dataset.from_list(records)
-
-# Save to disk
     hf_dataset.save_to_disk(args.output_dir)
 
     print(f"\nSaved Hugging Face dataset to: {args.output_dir}")
@@ -133,10 +168,11 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Classify dataset inputs with a vLLM model.")
+    parser.add_argument("--dataset_source", type=str, choices=["hub", "disk"], default="hub", help="Whether to load the dataset from the Hugging Face Hub or from a local path.")
     parser.add_argument("--dataset_name", type=str, required=True)
     parser.add_argument("--model_path", type=str, required=True)
     parser.add_argument("--split", type=str, default="train")
-    parser.add_argument("--text_column", type=str, required=True, help="Column containing the user text to classify.")
+    parser.add_argument("--text_column", type=str, default=None, help="Column containing the user text to classify.")
     parser.add_argument("--sample_size", type=int, default=0, help="Number of rows to process; 0 means full split.")
     parser.add_argument("--output_dir", type=str, required=True)
     parser.add_argument("--jsonl_output_path",type=str,default=None,help="Optional path to save results as a JSONL file.")

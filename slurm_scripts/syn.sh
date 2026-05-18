@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=api_syn_1000x5
+#SBATCH --job-name=api_5k_upstr2
 #SBATCH --account=kempner_dam_lab
 #SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --gpus-per-node=1
-#SBATCH --time=0-01:00:00
+#SBATCH --time=0-02:00:00
 #SBATCH --mem=32G
 #SBATCH --output=files/logs/%x_%j.out
 #SBATCH --error=files/logs/%x_%j.err
@@ -30,8 +30,8 @@ make_directory() {
 env_directory_setup
 export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
 
-SAMPLE_SIZE=1000
-NUM_GENERATIONS_PER_PERSONA=5
+SAMPLE_SIZE=2500
+NUM_GENERATIONS_PER_PERSONA=3
 SEED=42
 TEMPERATURE=1.0
 TOP_P=1.0

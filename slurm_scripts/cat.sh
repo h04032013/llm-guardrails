@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=cat_shen_full
+#SBATCH --job-name=cat_shen_16k_upstr
 #SBATCH --account=kempner_dam_lab
 #SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
@@ -30,7 +30,7 @@ make_directory() {
 env_directory_setup
 export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
 
-SAMPLE_SIZE=0
+SAMPLE_SIZE=16084
 DATASET_NAME="ShenLab/MentalChat16K"
 DATASET_SLUG="${DATASET_NAME//\//_}"
 MODEL_PATH="openai/gpt-oss-20b"
@@ -42,6 +42,7 @@ TEMPERATURE=0.7
 TOP_P=1.0
 MAX_TOKEN_LENGTH=4096
 SEED=42
+DATASET_SOURCE="hub" # options: "hub" or "disk"
 TENSOR_PARALLEL_SIZE=1
 JSONL_OUTPUT_PATH="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/JSONL_FORMAT/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples/${SPLIT}_${TEXT_COLUMN}.jsonl"
 
@@ -76,4 +77,5 @@ python categorize_text/vllm_categorize_input.py\
     --jsonl_output_path "$JSONL_OUTPUT_PATH" \
     --max_token_length $MAX_TOKEN_LENGTH \
     --top_p $TOP_P \
+    --dataset_source "$DATASET_SOURCE" \
     --seed $SEED
