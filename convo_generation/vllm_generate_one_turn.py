@@ -26,7 +26,7 @@ def main(args):
     print(f"Total inputs: {len(dataset)}")
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path)
-    llm = LLM( model=args.model_path, tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_model_len)
+    llm = LLM( model=args.model_path, tensor_parallel_size=args.tensor_parallel_size, )
 
     # Build prompts using ONLY the "input" field
     prompts = []
@@ -38,12 +38,12 @@ def main(args):
         temperature=args.temperature,
         top_p=args.top_p,
         seed=args.seed,
-        max_tokens=args.max_tokens)
+        max_tokens=args.max_token_length,)
 
     outputs = llm.generate(prompts, sampling_params)
     records = []
 
-     for row, user_text, output in zip(rows, extracted_texts, outputs):
+    for row, user_text, output in zip(rows, extracted_texts, outputs):
         gen = output.outputs[0]
         gen_text = gen.text.strip()
 
@@ -84,17 +84,17 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", type=str, required=True)
-    parser.add_argument("--output_dir", type=str, required=True)
+    parser.add_argument("--output_dir", type=str, required=True, help="Where to save HF dataset (to_disk).")
     parser.add_argument("--sample_size", type=int, default=0)
-    parser.add_argument("--dataset_name", type=str, default="ShenLab/MentalChat16K")
+    parser.add_argument("--dataset_name", type=str, required=True, help="Where did counseling promtps come from?")
     parser.add_argument("--split", type=str, default="train")
     parser.add_argument("--text_column", type=str, default="input")
     parser.add_argument("--tensor_parallel_size", type=int, default=1)
-    parser.add_argument("--max_model_len", type=int, default=8192)
     parser.add_argument("--temperature", type=float, default=0.6)
     parser.add_argument("--top_p", type=float, default=0.95)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--max_tokens", type=int, default=2048)
+    parser.add_argument("--max_token_length", type=int, default=8192)
+    parser.add_argument("--jsonl_output_path", type=str, default=None, help="Save as JSON for quick inspection and sanity checks")
 
     args = parser.parse_args()
     main(args)
