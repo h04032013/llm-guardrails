@@ -3,7 +3,7 @@ from transformers import AutoTokenizer
 import json
 from tqdm import tqdm
 from vllm import LLM, SamplingParams
-from datasets import load_dataset
+from datasets import load_dataset, load_from_disk, Dataset
 from dataset_utils import (
     sanitize_generated_text,
     save_dataset_dict,
