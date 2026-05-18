@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=cat_shen_500
+#SBATCH --job-name=cat_shen_full
 #SBATCH --account=kempner_dam_lab
 #SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
@@ -30,7 +30,7 @@ make_directory() {
 env_directory_setup
 export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
 
-SAMPLE_SIZE=500
+SAMPLE_SIZE=0
 DATASET_NAME="ShenLab/MentalChat16K"
 DATASET_SLUG="${DATASET_NAME//\//_}"
 MODEL_PATH="openai/gpt-oss-20b"

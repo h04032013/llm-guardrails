@@ -9,7 +9,7 @@ from datasets import load_dataset
 #https://github.com/tencent-ailab/persona-hub/tree/main/code
 #https://github.com/allenai/open-instruct/blob/main/scripts/persona_driven_data_gen/persona_driven_generate_math_code.py
 
-def request_input_format(user_text: str, tokenizer):
+def request_input_format(user_text, tokenizer):
     system_prompt = "You are a helpful assistant."
     messages = [
         {"role": "system", "content": system_prompt},
@@ -19,7 +19,7 @@ def request_input_format(user_text: str, tokenizer):
 
 def main(args):
     # Load dataset
-    ds = load_dataset("ShenLab/MentalChat16K", split="train")
+    ds = load_dataset(args.dataset_name, split="train")
 
     if args.sample_size > 0:
         ds = ds.select(range(args.sample_size))
@@ -43,7 +43,7 @@ def main(args):
 
     outputs = llm.generate(prompts, sampling_params)
 
-    with open(args.output_path, "w", encoding="utf-8") as f:
+    with open(args.output_dir, "w", encoding="utf-8") as f:
         for i, out in enumerate(outputs):
             f.write(json.dumps({
                 "input": ds[i]["input"],
@@ -51,13 +51,16 @@ def main(args):
                 "finish_reason": out.outputs[0].finish_reason
             }, ensure_ascii=False) + "\n")
 
-    print(f"Wrote: {args.output_path}")
+    print(f"Wrote: {args.output_dir}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", type=str, required=True)
-    parser.add_argument("--output_path", type=str, required=True)
+    parser.add_argument("--output_dir", type=str, required=True)
     parser.add_argument("--sample_size", type=int, default=0)
+    parser.add_argument("--dataset_name", type=str, default="ShenLab/MentalChat16K")
+    parser.add_argument("--split", type=str, default="train")
+    parser.add_argument("--text_column", type=str, default="input")
     parser.add_argument("--tensor_parallel_size", type=int, default=1)
     parser.add_argument("--max_model_len", type=int, default=8192)
     parser.add_argument("--temperature", type=float, default=0.6)

@@ -8,31 +8,8 @@ from openai import AsyncOpenAI
 from datasets import load_dataset, Dataset, Features, Value, Sequence
 
 QUESTION_GENERATION_PROMPT = (
-    "Generate a user conversation with following persona as if they are venting to a chatbot: {persona}."
+    "Generate a user message based on the following persona as if they are venting to a chatbot: {persona}."
 )
-
-features = Features({
-    "id": Value("int32"),
-    "persona": Value("string"),
-    "prompt": Value("string"),
-    "messages": Sequence({
-        "role": Value("string"),
-        "content": Value("string"),
-    }),
-    "metadata": {
-        "persona_source_dataset": Value("string"),
-        "persona_source_dataset_config_name": Value("string"),
-        "synthesize_model_params": {
-            "seed": Value("int32"),
-            "temperature": Value("float32"),
-            "top_p": Value("float32"),
-            "max_token_length": Value("int32"),
-            "model_name": Value("string"),
-        },
-        "question_generation_prompt": Value("string"),
-        "generation_idx": Value("int32"),
-    },
-})
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -62,7 +39,6 @@ async def generate_conversation(client, model_name, prompt, temperature, top_p, 
             {
                 "role": "system",
                 "content": (
-                    "You generate realistic single-turn user messages. "
                     "Return only the user's message, with no labels or extra commentary."
                 ),
             },
@@ -163,7 +139,7 @@ async def main():
         )
         records.extend(batch_results)
 
-    output_dataset = Dataset.from_list(records, features=features)
+    output_dataset = Dataset.from_list(records)
 
     output_dataset.save_to_disk(args.hf_output_path)
 
