@@ -2,6 +2,7 @@ import argparse
 from transformers import AutoTokenizer
 import json
 from tqdm import tqdm
+import os
 from vllm import LLM, SamplingParams
 from datasets import load_dataset, load_from_disk, Dataset
 from dataset_utils import (
@@ -30,18 +31,20 @@ def main(args):
 
     # Build prompts using ONLY the "input" field
     prompts = []
+    user_texts = []
     for ex in dataset:
         user_text = ex[args.text_column].strip()
+        user_texts.append(user_text)
         prompts.append(request_input_format(user_text, tokenizer))
+    
+    outputs = llm.generate(prompts, sampling_params)
+    records = []
 
     sampling_params = SamplingParams(
         temperature=args.temperature,
         top_p=args.top_p,
         seed=args.seed,
         max_tokens=args.max_token_length,)
-
-    outputs = llm.generate(prompts, sampling_params)
-    records = []
 
     for row, user_text, output in zip(rows, extracted_texts, outputs):
         gen = output.outputs[0]
@@ -62,7 +65,7 @@ def main(args):
                             "dataset": args.dataset_name
                         },
                         "upstream_metadata": row.get("metadata", {}),
-                    }
+                    },
         }
         records.append(record)
 
