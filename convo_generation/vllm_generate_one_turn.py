@@ -61,11 +61,12 @@ def main(args):
         gen_text = gen.text.strip()
 
         record = {
-            "input": user_text,
-            "model_generation": sanitize_generated_text(gen_text),
+            "input": row.get("input", None),
+            "input_category": row.get("predicted_category", None),
+            "model_response": sanitize_generated_text(gen_text),
             "finish_reason": gen.finish_reason,
             "metadata": {
-                        "generation": {
+                        "response_generation": {
                             "model_name": args.model_path,
                             "temperature": args.temperature,
                             "top_p": args.top_p,

@@ -95,9 +95,6 @@ def main(args):
 
     for row in dataset:
         user_text = extract_user_text(row, args.text_column)
-        if not user_text:
-            continue
-
         user_prompt = build_classification_prompt(user_text)
         prompt = request_input_format(user_prompt, tokenizer)
 
@@ -119,7 +116,6 @@ def main(args):
     )
 
     outputs = llm.generate(prompts, sampling_params)
-
     records = []
 
     for row, user_text, output in zip(rows, extracted_texts, outputs):
@@ -132,7 +128,7 @@ def main(args):
             "predicted_category": sanitize_generated_text(gen_text),
             "finish_reason": gen.finish_reason,
             "metadata": {
-                        "classification": {
+                        "input_classification": {
                             "model_name": args.model_path,
                             "temperature": args.temperature,
                             "top_p": args.top_p,
@@ -140,7 +136,7 @@ def main(args):
                             "seed": args.seed,
                             "prompt": output.prompt,
                         },
-                        "dataset": {
+                        "input_dataset": {
                             "source": args.dataset_source,
                             "name_or_path": args.dataset_name,
                             "split": args.split,

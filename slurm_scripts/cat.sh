@@ -1,13 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name=cat_synthetic_full
+#SBATCH --job-name=cat_shen
 #SBATCH --account=kempner_dam_lab
-#SBATCH --partition=kempner_h100
+#SBATCH --partition=kempner
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --gpus-per-node=1
-#SBATCH --time=0-00:15:00
-#SBATCH --mem=64G
+#SBATCH --time=0-00:10:00
+#SBATCH --mem=32G
 #SBATCH --output=files/logs/%x_%j.out
 #SBATCH --error=files/logs/%x_%j.err
 #SBATCH --mail-type=END
@@ -31,12 +31,13 @@ env_directory_setup
 export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
 
 SAMPLE_SIZE=0
-DATASET_NAME="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/synthetic_data/HF_FORMAT/proj-persona_PersonaHub/gpt-4.1-mini/2500samples.jsonl"
+DATASET_NAME="ShenLab/MentalChat16K"
+#DATASET_NAME="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/synthetic_data/HF_FORMAT/proj-persona_PersonaHub/gpt-4.1-mini/2500samples.jsonl"
 DATASET_SLUG="${DATASET_NAME//\//_}"
 MODEL_PATH="openai/gpt-oss-20b"
 SPLIT="train"
 MODEL_SLUG="${MODEL_PATH//\//_}"
-TEXT_COLUMN="synthetic_input"
+TEXT_COLUMN="input"
 OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/HF_FORMAT/synthetic_data/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
 TEMPERATURE=0.7
 TOP_P=1.0
