@@ -28,19 +28,23 @@ Warning: this might take sometime;
 ```
 llm-guardrails/
 ├── categorize_text/ #categorizing prompts and responses
+    ├── dataset_utils.py
     ├── vllm_categorize_input.py #use vllm to label input prompts 
     ├── vllm_categorize_output.py #use vllm to label output responses
     └── dataset_utils.py #parsing think traces from OSS models
 ├── convo_generation/ #generating responses to prompts and user convos
+    ├── dataset_utils.py
+    ├── filter_samples.py #filter by input categories to select samples for multi-turn
     ├── vllm_synthesize_one_turn.py
     └── vllm_synthesize_multi_turn.py 
 ├── embeddings/ # for embedding inputs stage
     ├── TBD- TODO: embed input prompts + find clusters 
 ├── slurm_scripts/
+    ├── cat.sh #categorize given prompt, input data agnostic
+    ├── filter.sh #run filter_samples.py
     ├── gen.sh #generate model response to emotional prompts
-    ├── syn.sh #generate persona-based synthetic data
-    └── cat.sh #categorize given prompt, input data agnostic
-├── synthetic_data/ #scripts for generating synthetic data
+    └── syn.sh #generate persona-based synthetic data
+├── synthetic_data/ #scripts for generating persona-based synthetic data
     └── api_synthesize.py
 └── files/               # gitignored, outputs + runtime artifacts
 ```
