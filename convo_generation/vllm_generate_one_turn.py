@@ -21,6 +21,9 @@ def request_input_format(user_text, tokenizer):
 def main(args):
     dataset = load_from_disk(args.dataset_name)
 
+    if args.split and hasattr(dataset, "keys"):
+        dataset = dataset[args.split]
+
     if args.sample_size > 0:
         dataset = dataset.select(range(min(args.sample_size, len(dataset))))
 
@@ -28,23 +31,30 @@ def main(args):
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path)
     llm = LLM( model=args.model_path, tensor_parallel_size=args.tensor_parallel_size, )
-
-    # Build prompts using ONLY the "input" field
-    prompts = []
-    user_texts = []
-    for ex in dataset:
-        user_text = ex[args.text_column].strip()
-        user_texts.append(user_text)
-        prompts.append(request_input_format(user_text, tokenizer))
-    
-    outputs = llm.generate(prompts, sampling_params)
-    records = []
-
     sampling_params = SamplingParams(
         temperature=args.temperature,
         top_p=args.top_p,
         seed=args.seed,
         max_tokens=args.max_token_length,)
+
+    # Build prompts using ONLY the "input" field
+    prompts = []
+    rows = []
+    extracted_texts = []
+
+    for row in dataset:
+        user_text = row[args.text_column].strip()
+        if not user_text:
+            continue
+
+        prompt = request_input_format(user_text, tokenizer)
+
+        prompts.append(prompt)
+        rows.append(row)
+        extracted_texts.append(user_text)
+    
+    outputs = llm.generate(prompts, sampling_params)
+    records = []
 
     for row, user_text, output in zip(rows, extracted_texts, outputs):
         gen = output.outputs[0]
