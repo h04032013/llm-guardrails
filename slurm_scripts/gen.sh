@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=one_turn_res_shen_5
+#SBATCH --job-name=one_turn_shen
 #SBATCH --account=kempner_dam_lab
 #SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --gpus-per-node=2
-#SBATCH --time=0-00:30:00
+#SBATCH --time=0-00:15:00
 #SBATCH --mem=128G
 #SBATCH --output=files/logs/%x_%j.out
 #SBATCH --error=files/logs/%x_%j.err
@@ -30,13 +30,14 @@ make_directory() {
 env_directory_setup
 export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
 
-SAMPLE_SIZE=5
-DATASET_NAME="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/HF_FORMAT/ShenLab_MentalChat16K/openai_gpt-oss-20b/16084samples"
+SAMPLE_SIZE=50
+DATASET_NAME="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/HF_FORMAT/ShenLab_MentalChat16K/openai_gpt-oss-20b/0samples"
+#DATASET_NAME="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/HF_FORMAT/synthetic_data/openai_gpt-oss-20b/0samples"
 MODEL_PATH="openai/gpt-oss-120b"
 SPLIT="train"
 MODEL_SLUG="${MODEL_PATH//\//_}"
 TEXT_COLUMN="input"
-OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/generated_responses/one_turn/HF_FORMAT/MentalChat16k/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
+OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/generated_responses/one_turn/HF_FORMAT/MentalChat16k(fr)/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
 TEMPERATURE=0.7
 TOP_P=1.0
 MAX_TOKEN_LENGTH=8192

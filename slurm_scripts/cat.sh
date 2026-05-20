@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=cat_shen
 #SBATCH --account=kempner_dam_lab
-#SBATCH --partition=kempner
+#SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
@@ -38,14 +38,14 @@ MODEL_PATH="openai/gpt-oss-20b"
 SPLIT="train"
 MODEL_SLUG="${MODEL_PATH//\//_}"
 TEXT_COLUMN="input"
-OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/HF_FORMAT/synthetic_data/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
+OUTPUT_DIR="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/HF_FORMAT/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples"
 TEMPERATURE=0.7
 TOP_P=1.0
 MAX_TOKEN_LENGTH=4096
 SEED=42
-DATASET_SOURCE="disk" # options: "hub" or "disk"
+DATASET_SOURCE="hub" # options: "hub" or "disk"
 TENSOR_PARALLEL_SIZE=1
-JSONL_OUTPUT_PATH="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/JSONL_FORMAT/synthetic_data/${MODEL_SLUG}/${SAMPLE_SIZE}samples/${SPLIT}_${TEXT_COLUMN}.jsonl"
+JSONL_OUTPUT_PATH="/n/netscratch/dam_lab/Lab/hdiaz/guardrail_data/categorized_input/JSONL_FORMAT/${DATASET_SLUG}/${MODEL_SLUG}/${SAMPLE_SIZE}samples/${SPLIT}_${TEXT_COLUMN}.jsonl"
 
 make_directory
 
