@@ -30,7 +30,7 @@ make_directory() {
 env_directory_setup
 export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
 
-SAMPLE_SIZE=2500
+SAMPLE_SIZE=5000
 NUM_GENERATIONS_PER_PERSONA=3
 SEED=42
 TEMPERATURE=1.0
@@ -40,7 +40,7 @@ DATASET_NAME="proj-persona/PersonaHub"
 DATASET_CONFIG_NAME="persona"
 
 DATASET_SLUG="${DATASET_NAME//\//_}"
-MODEL_NAME="gpt-4.1-mini"
+MODEL_NAME="allenai/Llama-3.1-Tulu-3-70B"
 MODEL_SLUG="${MODEL_NAME//\//_}"
 SPLIT="train"
 API_KEY_PATH="/n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails/files/api_key.txt"
@@ -78,4 +78,3 @@ python synthetic_data/api_synthesize.py \
     --max_token_length $MAX_TOKEN_LENGTH \
     --top_p $TOP_P \
     --seed $SEED \
-    --api_key_path "$API_KEY_PATH" 

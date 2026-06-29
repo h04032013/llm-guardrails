@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=api_5k_upstr2
+#SBATCH --job-name=api_cat_shen_full
 #SBATCH --account=kempner_dam_lab
 #SBATCH --partition=kempner_h100
 #SBATCH --nodes=1
@@ -7,9 +7,9 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --gpus-per-node=1
 #SBATCH --time=0-02:00:00
-#SBATCH --mem=32G
-#SBATCH --output=files/logs/%x_%j.out
-#SBATCH --error=files/logs/%x_%j.err
+#SBATCH --mem=16G
+#SBATCH --output=/n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails/fast_tracked/logs/%x_%j.out
+#SBATCH --error=/n/holylabs/LABS/dam_lab/Users/hdiaz/llm-guardrails/fast_tracked/logs/%x_%j.err
 #SBATCH --mail-type=END
 #SBATCH --mail-user=hdiaz@g.harvard.edu 
 
@@ -30,10 +30,10 @@ make_directory() {
 env_directory_setup
 export HF_HOME="/n/netscratch/dam_lab/Lab/hdiaz/hgf_new_hub"
 
-SAMPLE_SIZE=0
+SAMPLE_SIZE=16084
 NUM_GENERATIONS_PER_PERSONA=1
 SEED=42
-TEMPERATURE=0
+TEMPERATURE=0.6
 TOP_P=1.0
 MAX_TOKEN_LENGTH=512
 DATASET_NAME="ShenLab/MentalChat16K"
@@ -54,7 +54,6 @@ echo "Job ID:        $SLURM_JOB_ID"
 echo "Node:          $SLURMD_NODENAME"
 echo "Model:         $MODEL_NAME"
 echo "Dataset:       $DATASET_NAME"
-echo "Config:        $DATASET_CONFIG_NAME"
 echo "Sample size:   $SAMPLE_SIZE"
 echo "Max tokens:    $MAX_TOKEN_LENGTH"
 echo "Generations:   $NUM_GENERATIONS_PER_PERSONA"
@@ -65,7 +64,7 @@ echo "Start time:    $(date)"
 echo "HF_HOME:       $HF_HOME"
 echo "========================================"
 
-python synthetic_data/api_synthesize.py \
+python fast_tracked/api_categorize_input.py \
     --model_name "$MODEL_NAME" \
     --sample_size $SAMPLE_SIZE \
     --generations_per_persona $NUM_GENERATIONS_PER_PERSONA \
